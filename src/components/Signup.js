@@ -2,6 +2,8 @@ import { useState, } from "react";
 import { Form, Button } from "react-bootstrap";
 import classes from './SignUp.module.css';
 import { useHistory } from "react-router-dom";
+import { authActions } from "./store/auth-slice";
+import { useDispatch } from "react-redux";
 
 const Signup = () => {
 
@@ -10,6 +12,7 @@ const Signup = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isLogin, setIsLogin] = useState(true)
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const emailHandler = (e) => {
         setEmail(e.target.value)
@@ -70,7 +73,15 @@ const Signup = () => {
                 .then((data) => {
                     if (isLogin) {
                         console.log(data.idToken);
-                        history.replace('/DummyScreen');
+                        const regex = /[.@]/g;
+                        const email = data.email.replace(regex, "");
+                        dispatch(
+                            authActions.login({
+                                email: email,
+                                token: data.idToken,
+                            })
+                        )
+                        history.replace('/SendMail');
 
                     }
                 })
@@ -119,7 +130,7 @@ const Signup = () => {
         Form.Group className = "mb-3"
         controlId = "password" >
         <
-        Form.Label > PassWord: < /Form.Label> <
+        Form.Label > Password: < /Form.Label> <
         Form.Control type = "password"
 
         placeholder = " password"

@@ -2,10 +2,16 @@ import { Fragment } from 'react';
 import Signup from './components/Signup';
 import DummyScreen from './components/pages/DummyScreen';
 import { Route } from 'react-router-dom';
+import SendMail from './components/pages/SendMail';
+import Header from './components/pages/Header';
 
 function App() {
     return ( <
         Fragment >
+        <
+        Header / >
+        <
+        br / >
         <
         Route path = '/'
         exact >
@@ -17,6 +23,12 @@ function App() {
         exact >
         <
         DummyScreen / >
+        <
+        /Route> <
+        Route path = "/SendMail"
+        exact >
+        <
+        SendMail / >
         <
         /Route>
 
