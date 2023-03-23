@@ -4,6 +4,7 @@ import DummyScreen from './components/pages/DummyScreen';
 import { Route } from 'react-router-dom';
 import SendMail from './components/pages/SendMail';
 import Header from './components/pages/Header';
+import MailInbox from './components/pages/MailInbox';
 
 function App() {
     return ( <
@@ -29,6 +30,12 @@ function App() {
         exact >
         <
         SendMail / >
+        <
+        /Route> <
+        Route path = "/MailInbox"
+        exact >
+        <
+        MailInbox / >
         <
         /Route>
 

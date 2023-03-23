@@ -10,6 +10,7 @@ import { enableMapSet } from "immer";
 const SendMail = () => {
     const currEmail = useSelector((state) => state.auth.email);
     const [email, setEmail] = useState("");
+    const [subject, setSubject] = useState("");
     const [text, setText] = useState("");
 
     let content;
@@ -20,12 +21,16 @@ const SendMail = () => {
     const sendEmailHandler = (e) => {
         setEmail(e.target.value);
     }
+    const sendSubjectHandler = (e) => {
+        setSubject(e.target.value);
+    }
     const submitHandler = (e) => {
         e.preventDefault();
 
         const obj = {
             email: email,
-            body: content
+            body: content,
+            subject: subject
         }
         const regex = /[.@]/g;
         const emailId = obj.email.replace(regex, "");
@@ -36,6 +41,7 @@ const SendMail = () => {
                 body: JSON.stringify({
                     email: email,
                     body: content,
+                    subject: subject
                 }),
                 headers: {
                     "Content-Type": "application/json",
@@ -48,7 +54,8 @@ const SendMail = () => {
                 method: "POST",
                 body: JSON.stringify({
                     email: currEmail,
-                    body: content
+                    body: content,
+                    subject: subject
                 }),
                 headers: {
                     "Content-Type": "application/json",
@@ -88,30 +95,41 @@ const SendMail = () => {
         <
         /Form.Group> <
         /div> <
+        div >
+        <
+        Form.Group controlId = "To" >
+        <
+        Form.Label > Subject < /Form.Label> <
+        Form.Control type = "text"
+        placeholder = "Subject"
+        value = { subject }
+        onChange = { sendSubjectHandler }
+        required /
+        >
+        <
+        /Form.Group> <
+        /div> <
         br / >
         <
         div >
         <
-        label htmlFor = "text " > Compose email: < /label> <
+        label htmlFor = "text " > Compose email: < /label> {
+            /* <textarea
+                       className={classes.textArea}
+                        value={text}
+                         onChange={(e) => setText(e.target.value)}
+                             placeholder="Type your message here"
+                                       /> */
+        } <
         Editor
         //  editorState={editorState}
+        className = { classes.editor }
+        placeholder = "Type your message here"
         toolbarClassName = "toolbarClassName"
         wrapperClassName = "wrapperClassName"
         editorClassName = "editorClassName"
         onEditorStateChange = { onEditorStateChange }
         /> <
-        /div> <
-        div >
-        <
-        Form.Group controlId = "Body" >
-        <
-        Form.Control as = "textarea"
-        rows = { 4 }
-        value = { text }
-        onChange = {
-            (e) => setText(e.target.value) }
-        /> <
-        /Form.Group> <
         /div> <
         div >
         <
