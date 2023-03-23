@@ -5,6 +5,8 @@ import { Route } from 'react-router-dom';
 import SendMail from './components/pages/SendMail';
 import Header from './components/pages/Header';
 import MailInbox from './components/pages/MailInbox';
+import MailDetail from './components/pages/MailDetail';
+import Sent from './components/pages/Sent';
 
 function App() {
     return ( <
@@ -36,6 +38,18 @@ function App() {
         exact >
         <
         MailInbox / >
+        <
+        /Route> <
+        Route path = "/MailDetail"
+        exact >
+        <
+        MailDetail / >
+        <
+        /Route> <
+        Route path = "/Sent"
+        exact >
+        <
+        Sent / >
         <
         /Route>
 

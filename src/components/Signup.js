@@ -81,7 +81,7 @@ const Signup = () => {
                                 token: data.idToken,
                             })
                         )
-                        history.replace('/SendMail');
+                        history.replace('/MailInbox');
 
                     }
                 })

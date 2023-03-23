@@ -1,65 +1,113 @@
 import { Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { inboxActions } from "../store/inbox-slice";
+import { objActions } from "../store/obj-slice";
+import { useHistory } from "react-router-dom";
 
 const MailInbox = () => {
-    const loggedEmail = useSelector((state) => state.auth.email);
-    const dispatch = useDispatch();
-    const inbox = useSelector((state) => state.inbox.inbox);
+        const loggedEmail = useSelector((state) => state.auth.email);
+        const dispatch = useDispatch();
+        const inbox = useSelector((state) => state.inbox.inbox);
+        const history = useHistory();
 
-    console.log(inbox);
+        console.log(inbox);
 
-    const getData = async() => {
-        const get = await fetch(`https://mail-box-client-271ae-default-rtdb.firebaseio.com/${loggedEmail}/inbox.json`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
+        const getData = async() => {
+            const get = await fetch(`https://mail-box-client-271ae-default-rtdb.firebaseio.com/${loggedEmail}/inbox.json`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            const data = await get.json();
+            console.log(data);
+            let newArray = [];
+            if (!!data) {
+                newArray = Object.keys(data).map((mail) => {
+                    return {
+                        id: mail,
+                        email: data[mail].email,
+                        subject: data[mail].subject,
+                        body: data[mail].body,
+                        read: data[mail].read,
+                    };
+                });
+                console.log(newArray);
+                dispatch(
+                    inboxActions.inboxHandler({
+                        newArray: newArray,
+                    })
+                );
+                dispatch(inboxActions.inboxMailRead(newArray));
             }
-        })
-        const data = await get.json();
-        console.log(data);
-        let newArray = [];
-        if (!!data) {
-            newArray = Object.keys(data).map((mail) => {
-                return {
-                    id: mail,
-                    email: data[mail].email,
-                    subject: data[mail].subject,
-                    body: data[mail].body
-                };
+        };
+        useEffect(() => {
+            getData();
+        }, []);
+        const inboxMailReadFetching = (mail) => {
+            const updateData = async(mail) => {
+                try {
+                    const response = await fetch(
+                        `https://mail-box-client-271ae-default-rtdb.firebaseio.com//${loggedEmail}/inbox/${mail.id}.json`, {
+                            method: "PUT",
+                            body: JSON.stringify({
+                                ...mail,
+                                read: true,
+                            }),
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        }
+                    );
+                    const data = await response.json();
+                    console.log(data);
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            updateData(mail);
+        };
+
+        const openMailHandler = (obj) => {
+            dispatch(objActions.objHandler(obj));
+            dispatch(inboxActions.inboxMailRead(obj));
+
+            const mail = inbox.find((mail) => {
+                return mail.id === obj.id;
             });
-            console.log(newArray);
-            dispatch(
-                inboxActions.inboxHandler({
-                    newArray: newArray,
-                })
-            );
-        }
-    };
-    useEffect(() => {
-        getData();
-    }, []);
-    return ( <
-        Fragment >
-        <
-        ul > {
-            inbox.map((arr) => ( <
-                li key = { arr.id } >
-                <
-                span style = {
-                    { marginRight: "1em" } } > Email: { arr.email } < /span><br / >
-                <
-                span style = {
-                    { marginRight: "1em" } } > Subject: { arr.subject } < /span><br / >
-                <
-                span > Body: { arr.body } < /span> <
-                /li>
-            ))
-        } <
-        /ul> <
-        /Fragment>
-    )
+            inboxMailReadFetching(mail);
+            history.replace("/MailDetail");
+        };
+        return ( <
+            Fragment >
+            <
+            h1 className = "text-center" > INBOX < /h1> <
+            ul > {
+                inbox.map((obj) => ( <
+                        div key = { obj.id } >
+                        <
+                        table className = "table" >
+                        <
+                        tbody >
+                        <
+                        tr >
+                        <
+                        td > { obj.email } < /td> <
+                        td onClick = { openMailHandler.bind(null, obj) } > { obj.body } < /td> <
+                        td onClick = { openMailHandler.bind(null, obj) } > { obj.subject } < /td>
+
+                        <
+                        td > {!!obj.read ? "read" : < b > "Unread" < /b>}</td >
+                            <
+                            /tr> <
+                            /tbody> <
+                            /table> <
+                            /div>))
+                } <
+                /ul> <
+                /Fragment>
+            )
 
 
-};
-export default MailInbox;
+        };
+        export default MailInbox;

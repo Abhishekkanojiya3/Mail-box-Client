@@ -123,8 +123,9 @@ const SendMail = () => {
         } <
         Editor
         //  editorState={editorState}
-        className = { classes.editor }
+        className = { classes.box }
         placeholder = "Type your message here"
+
         toolbarClassName = "toolbarClassName"
         wrapperClassName = "wrapperClassName"
         editorClassName = "editorClassName"
