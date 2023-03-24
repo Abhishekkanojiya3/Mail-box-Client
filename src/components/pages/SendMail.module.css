@@ -15,3 +15,31 @@
     border: 2px solid #141516;
     margin-bottom: 10px;
 }
+
+.button {
+    background-color: #f44336;
+    /* Set the background color */
+    border: none;
+    /* Remove the border */
+    color: white;
+    /* Set the text color */
+    padding: 10px 20px;
+    /* Add some padding */
+    text-align: center;
+    /* Center the text */
+    text-decoration: none;
+    /* Remove the underline */
+    display: inline-block;
+    /* Display the button as a block element */
+    font-size: 16px;
+    /* Set the font size */
+    margin: 5px;
+    /* Add some margin */
+    cursor: pointer;
+    opacity: 1;
+}
+
+.button:hover {
+    background-color: #d32f2f;
+    /* Darken the background color on hover */
+}

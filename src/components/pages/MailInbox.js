@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { inboxActions } from "../store/inbox-slice";
 import { objActions } from "../store/obj-slice";
 import { useHistory } from "react-router-dom";
-
+import classes from './SendMail.module.css'
 const MailInbox = () => {
         const loggedEmail = useSelector((state) => state.auth.email);
         const dispatch = useDispatch();
@@ -78,6 +78,22 @@ const MailInbox = () => {
             inboxMailReadFetching(mail);
             history.replace("/MailDetail");
         };
+
+        const deleteHandler = async(obj) => {
+            try {
+                const del = await fetch(`https://mail-box-client-271ae-default-rtdb.firebaseio.com//${loggedEmail}/inbox/${obj.id}.json`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                const data = await del.json();
+                console.log(data);
+                getData();
+            } catch (err) {
+                alert(err.message)
+            }
+        };
         return ( <
             Fragment >
             <
@@ -98,11 +114,20 @@ const MailInbox = () => {
 
                         <
                         td > {!!obj.read ? "read" : < b > "Unread" < /b>}</td >
-                            <
-                            /tr> <
+                                <
+                                /tr> <
+                                td >
+                                <
+                                button
+                            className = "btn btn-primary"
+                            onClick = { deleteHandler.bind(null, obj) } >
+                            Delete <
+                            /button> <
+                            /td> <
                             /tbody> <
                             /table> <
-                            /div>))
+                            /div>
+                        ))
                 } <
                 /ul> <
                 /Fragment>

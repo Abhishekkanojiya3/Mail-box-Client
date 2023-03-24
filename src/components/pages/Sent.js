@@ -14,7 +14,7 @@ const Sent = () => {
 
     const getSentData = async() => {
         const sentMail = await fetch(
-            `https://mail-box-e2dc8-default-rtdb.firebaseio.com/${loggedEmail}/sent.json`, {
+            `https://mail-box-client-271ae-default-rtdb.firebaseio.com//${loggedEmail}/sent.json`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -30,7 +30,8 @@ const Sent = () => {
                     id: mail,
                     email: data[mail].email,
                     body: data[mail].body,
-                    subject: data[mail].subject
+                    subject: data[mail].subject,
+                    read: data[mail].read,
 
                 };
             });
@@ -50,7 +51,7 @@ const Sent = () => {
         const updatedData = async(mail) => {
             try {
                 const response = await fetch(
-                    `https://mail-box-e2dc8-default-rtdb.firebaseio.com/${loggedEmail}/sent/${mail.id}.json`, {
+                    `https://mail-box-client-271ae-default-rtdb.firebaseio.com//${loggedEmail}/sent/${mail.id}.json`, {
                         method: "PUT",
                         body: JSON.stringify({
                             ...mail,
@@ -81,6 +82,22 @@ const Sent = () => {
         sentMailReadFetching(mail);
         history.replace("/MailDetail");
     };
+    const deleteSentMailHandler = async(obj) => {
+        try {
+            const delSentMail = await fetch(
+                `https://mail-box-client-271ae-default-rtdb.firebaseio.com//${loggedEmail}/sent/${obj.id}.json`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            const data = await delSentMail.json();
+            getSentData();
+        } catch (err) {
+            //   alert(err.message);
+        }
+    };
 
     return ( <
         Fragment >
@@ -98,6 +115,13 @@ const Sent = () => {
                 <
                 td > { obj.email } < /td> <
                 td onClick = { openSentMailHandler.bind(null, obj) } > { obj.body } <
+                /td> <
+                td >
+                <
+                button className = "btn btn-danger"
+                onClick = { deleteSentMailHandler.bind(null, obj) } >
+                Delete <
+                /button> <
                 /td>
 
                 <
