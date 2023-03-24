@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { inboxActions } from "../store/inbox-slice";
 import { objActions } from "../store/obj-slice";
 import { useHistory } from "react-router-dom";
-import classes from './SendMail.module.css'
+
 const MailInbox = () => {
         const loggedEmail = useSelector((state) => state.auth.email);
         const dispatch = useDispatch();
@@ -42,7 +42,10 @@ const MailInbox = () => {
             }
         };
         useEffect(() => {
-            getData();
+            setInterval(() => {
+                console.log(`get emails called`);
+                getData();
+            }, 2000);
         }, []);
         const inboxMailReadFetching = (mail) => {
             const updateData = async(mail) => {

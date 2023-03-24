@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import classes from "./SendMail.module.css";
@@ -12,6 +12,8 @@ const SendMail = () => {
     const [email, setEmail] = useState("");
     const [subject, setSubject] = useState("");
     const [text, setText] = useState("");
+    const [inboxData, setInboxData] = useState([]);
+
 
     let content;
     const onEditorStateChange = (event) => {
@@ -24,6 +26,7 @@ const SendMail = () => {
     const sendSubjectHandler = (e) => {
         setSubject(e.target.value);
     }
+
     const submitHandler = (e) => {
         e.preventDefault();
 
@@ -67,8 +70,20 @@ const SendMail = () => {
         postData();
         setEmail("");
         setText("")
-
     };
+    useEffect(() => {
+        const fetchData = async() => {
+            const response = await fetch(
+                `https://mail-box-client-271ae-default-rtdb.firebaseio.com/${currEmail}/inbox.json`
+            );
+            const data = await response.json();
+            if (data) {
+                setInboxData(Object.values(data));
+            }
+        };
+        fetchData();
+    }, [currEmail]);
+
     return ( <
         Fragment >
         <
