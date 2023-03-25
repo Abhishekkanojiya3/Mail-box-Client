@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { inboxActions } from "../store/inbox-slice";
 import { objActions } from "../store/obj-slice";
 import { useHistory } from "react-router-dom";
+import useMail from "../hooks/useMail";
 
 const MailInbox = () => {
         const loggedEmail = useSelector((state) => state.auth.email);
@@ -11,42 +12,43 @@ const MailInbox = () => {
         const history = useHistory();
 
         console.log(inbox);
+        useMail(false);
 
-        const getData = async() => {
-            const get = await fetch(`https://mail-box-client-271ae-default-rtdb.firebaseio.com/${loggedEmail}/inbox.json`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            })
-            const data = await get.json();
-            console.log(data);
-            let newArray = [];
-            if (!!data) {
-                newArray = Object.keys(data).map((mail) => {
-                    return {
-                        id: mail,
-                        email: data[mail].email,
-                        subject: data[mail].subject,
-                        body: data[mail].body,
-                        read: data[mail].read,
-                    };
-                });
-                console.log(newArray);
-                dispatch(
-                    inboxActions.inboxHandler({
-                        newArray: newArray,
-                    })
-                );
-                dispatch(inboxActions.inboxMailRead(newArray));
-            }
-        };
-        useEffect(() => {
-            setInterval(() => {
-                console.log(`get emails called`);
-                getData();
-            }, 2000);
-        }, []);
+        // const getData = async () =>{
+        //     const get = await fetch(`https://mail-box-client-271ae-default-rtdb.firebaseio.com/${loggedEmail}/inbox.json`,{
+        //         method: "GET",
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     }
+        //     })
+        //     const data = await get.json();
+        //     console.log(data);
+        //     let newArray = [];
+        //     if(!!data){
+        //         newArray = Object.keys(data).map((mail) => {
+        //             return {
+        //               id: mail,
+        //               email: data[mail].email,
+        //               subject: data[mail].subject,
+        //               body:data[mail].body,
+        //               read: data[mail].read,
+        //             };
+        //           });
+        //           console.log(newArray);
+        //           dispatch(
+        //             inboxActions.inboxHandler({
+        //               newArray: newArray,
+        //             })
+        //           );
+        //           dispatch(inboxActions.inboxMailRead(newArray));
+        //     }
+        // };
+        // useEffect(() => { 
+        //   setInterval(() => {
+        //       console.log(`get emails called`);
+        //       getData();
+        //     }, 2000);
+        //   }, []);
         const inboxMailReadFetching = (mail) => {
             const updateData = async(mail) => {
                 try {
@@ -73,12 +75,12 @@ const MailInbox = () => {
 
         const openMailHandler = (obj) => {
             dispatch(objActions.objHandler(obj));
-            dispatch(inboxActions.inboxMailRead(obj));
+            // dispatch(inboxActions.inboxMailRead(obj));
 
-            const mail = inbox.find((mail) => {
-                return mail.id === obj.id;
-            });
-            inboxMailReadFetching(mail);
+            // const mail = inbox.find((mail) => {
+            //   return mail.id === obj.id;
+            // });
+            inboxMailReadFetching(obj);
             history.replace("/MailDetail");
         };
 
@@ -92,7 +94,7 @@ const MailInbox = () => {
                 })
                 const data = await del.json();
                 console.log(data);
-                getData();
+                // getData();
             } catch (err) {
                 alert(err.message)
             }

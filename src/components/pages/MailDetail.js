@@ -27,14 +27,13 @@ const MailDetail = () => {
         <
         h3 > To: { currEmail } < /h3> <
         /td> <
-        /tr> <
-        tr >
-        <
-        td >
-        <
-        h4 > from: { specificEmail.email } < /h4> <
-        /td> <
-        /tr> <
+        /tr> {
+            /* <tr>
+                            <td>
+                              <h4>from: {specificEmail.email}</h4>
+                            </td>
+                          </tr> */
+        } <
         tr >
         <
         td >
@@ -48,7 +47,7 @@ const MailDetail = () => {
         <
         td >
         <
-        h6 > message: { specificEmail.body } < /h6> <
+        h6 > Message: { specificEmail.body } < /h6> <
         /td> <
         /tr> <
         /tbody> <
